@@ -1,0 +1,13 @@
+{
+  "name": "mini-blockchain",
+  "version": "1.0.0",
+  "description": "Implementation of Mini Blockchain.",
+  "main": "index.js",
+  "repository": "https://",
+  "author": "Daenam Kim <daenam.kim@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "crypto-js": "^3.1.9-1"
+  }
+}

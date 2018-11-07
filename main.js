@@ -46,17 +46,8 @@ class Blockchain {
     return this.chain[this.chain.length - 1];
   }
 
-  // DEPRECATED
-  addBlock(newBlock) {
-    newBlock.previousHash = this.geLatestBlock().hash;
-    // newBlock.hash = newBlock.calculateHash();
-    newBlock.hash = newBlock.mineBlock(this.difficulty);
-    this.chain.push(newBlock);
-  }
-
   minePendingTransactions(miningRewardAddress) {
-    // TODO: what about previous hash?
-    let block = new Block(Date.now(), this.pendingTransactions);
+    let block = new Block(Date.now(), this.pendingTransactions, this.geLatestBlock().hash);
     block.mineBlock(this.difficulty);
 
     console.log('Block successfully mined!');

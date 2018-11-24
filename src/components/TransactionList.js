@@ -1,52 +1,102 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardActionArea,
   CardContent,
-  CardActions,
   Typography,
   AppBar,
   Toolbar,
-  Button
+  Button,
+  Badge,
+  IconButton
 } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import { Delete as DeleteIcon, Add as AddIcon } from '@material-ui/icons';
+import { withStyles } from '@material-ui/core/styles';
 import './TransactionList.css';
 
-const dummy = new Array(100).fill(1);
+const styles = {
+  flex: {
+    display: 'flex'
+  },
+  typographyGrow: {
+    flexGrow: 1,
+    textAlign: 'left',
+    marginLeft: 20
+  },
+  cardGrow: {
+    flexGrow: 1
+  },
+  forceSmall: {
+    minWidth: 40,
+    minHeight: 40,
+    width: 40,
+    height: 40
+  }
+}
 
-const TransactionList = ({ title }) => (
+const TransactionList = ({ classes, title, transactions, isMutable }) => (
   <div className="transaction-list">
     <AppBar position="static" color="default">
-      <Toolbar>
-        <Typography variant="h6" color="inherit">{title}</Typography>
+      <Toolbar className={classes.flex}>
+        <Badge badgeContent={transactions.length || 0} color="primary">
+          <span></span>
+        </Badge>
+        <Typography
+          variant="h6"
+          color="inherit"
+          className={classes.typographyGrow}
+        >
+          {title}
+        </Typography>
+        {isMutable
+          ? <Button
+              variant="fab"
+              color="primary"
+              className={classes.forceSmall}
+              onClick={() => alert("TODO:")}
+            >
+              <AddIcon />
+            </Button>
+          : null
+        }
       </Toolbar>
     </AppBar>
     <ul >
-      {dummy.map((item, index) =>
+      {transactions.map((item, index) =>
         <li key={index} className="transaction-list--item">
-          <Card>
-            <CardActionArea>
-              <CardContent>
-                <Typography variant="h5" component="h3">
-                  title
+          <Card className={classes[item.isValid]}>
+            <CardActionArea className={classes.flex} component="div">
+              <CardContent className={classes.cardGrow}>
+                <Typography variant="h6" component="h3">
+                  From: {item.from}
+                </Typography>
+                <Typography variant="h6" component="h3">
+                  To: {item.to}
                 </Typography>
                 <Typography component="p">
-                  test
+                  Amount: {item.amount} Coins
+                </Typography>
+                <Typography component="p">
+                  {item.time}
                 </Typography>
               </CardContent>
+              {isMutable
+                ? <IconButton aria-label="Delete" onClick={() => alert("TODO:")}>
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                : null
+              }
             </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary">
-                <DeleteIcon />
-                Remove
-              </Button>
-            </CardActions>
           </Card>
         </li>
-      )
-    }
+      )}
     </ul>
   </div>
 );
 
-export default TransactionList;
+TransactionList.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(TransactionList);

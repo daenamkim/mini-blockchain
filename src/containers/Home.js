@@ -5,7 +5,9 @@ class Home extends Component {
   render() {
     return (
       <div>
+        {/* TODO: Logo */}
         <UserInfoInput />
+        {/* TODO: Play Blockchain */}
       </div>
     );
   }

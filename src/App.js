@@ -6,9 +6,7 @@ import Blockchain from './containers/Blockchain';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
+  componentDidMount() {
     // TODO: user name check and if no then show input
   }
 

@@ -4,7 +4,7 @@ import Dashboard from '../components/Dashboard';
 import BlockDetail from '../components/BlockDetail';
 import TransactionDetail from '../components/TransactionDetail';
 import { MENU } from '../constants';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 class Blockchain extends Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 export const MENU = {
-  DASHBOARD: 'Dashboard',
+  HOME: 'Home',
   BLOCK_DETAIL: 'Block Detail',
   TRANSACTION_DETAIL: 'Transaction Detail',
   NONE: ''

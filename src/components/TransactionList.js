@@ -35,8 +35,16 @@ const styles = {
   }
 }
 
-const TransactionList = ({ classes, title, transactions, isMutable }) => (
-  <div className="transaction-list">
+const TransactionList = ({
+  classes,
+  title,
+  transactions,
+  isMutable,
+  onSelectTransaction,
+  onDeleteTransaction,
+  onCreateTransaction
+}) => (
+  <div className="transaction-list" style={{flexGrow: 1}}>
     <AppBar position="static" color="default">
       <Toolbar className={classes.flex}>
         <Badge badgeContent={transactions.length || 0} color="primary">
@@ -54,7 +62,7 @@ const TransactionList = ({ classes, title, transactions, isMutable }) => (
               variant="fab"
               color="primary"
               className={classes.forceSmall}
-              onClick={() => alert("TODO:")}
+              onClick={onCreateTransaction}
             >
               <AddIcon />
             </Button>
@@ -66,7 +74,11 @@ const TransactionList = ({ classes, title, transactions, isMutable }) => (
       {transactions.map((item, index) =>
         <li key={index} className="transaction-list--item">
           <Card className={classes[item.isValid]}>
-            <CardActionArea className={classes.flex} component="div">
+            <CardActionArea
+              className={classes.flex}
+              component="div"
+              onClick={event => { event.stopPropagation(); onSelectTransaction(item.id);}}
+            >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">
                   From: {item.from}
@@ -82,7 +94,10 @@ const TransactionList = ({ classes, title, transactions, isMutable }) => (
                 </Typography>
               </CardContent>
               {isMutable
-                ? <IconButton aria-label="Delete" onClick={() => alert("TODO:")}>
+                ? <IconButton
+                    aria-label="Delete"
+                    onClick={(event) => {event.stopPropagation(); onDeleteTransaction(item.id);}}
+                  >
                     <DeleteIcon fontSize="small" />
                   </IconButton>
                 : null

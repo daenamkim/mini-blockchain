@@ -41,7 +41,15 @@ const styles = {
   }
 }
 
-const BlockList = ({ classes, title, blocks }) => (
+const BlockList = ({
+  classes,
+  title,
+  blocks,
+  onSelectBlock,
+  onDeleteBlock,
+  onCancelBlock,
+  onCreateBlock
+}) => (
   <div className="block-list">
     <AppBar position="static" color="default">
       <Toolbar className={classes.flex}>
@@ -55,11 +63,12 @@ const BlockList = ({ classes, title, blocks }) => (
         >
           {title}
         </Typography>
+        <Button aria-label="Cancel" color="inherit" onClick={onCancelBlock}>Cancel</Button>
         <Button
           variant="fab"
           color="primary"
           className={classes.forceSmall}
-          onClick={() => alert("TODO:")}
+          onClick={onCreateBlock}
         >
           <AddIcon />
         </Button>
@@ -69,7 +78,11 @@ const BlockList = ({ classes, title, blocks }) => (
       {blocks.map((item, index) =>
         <li key={index} className="block-list--item">
           <Card className={classes[item.isValid]}>
-            <CardActionArea className={classes.flex} component="div">
+            <CardActionArea
+              className={classes.flex}
+              component="div"
+              onClick={event => { event.stopPropagation(); onSelectBlock(item.id);}}
+            >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">
                   {item.hash}
@@ -81,7 +94,10 @@ const BlockList = ({ classes, title, blocks }) => (
                   {item.time}
                 </Typography>
               </CardContent>
-              <IconButton aria-label="Delete" onClick={() => alert("TODO:")}>
+              <IconButton
+                aria-label="Delete"
+                onClick={event => { event.stopPropagation(); onDeleteBlock(item.id);}}
+              >
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </CardActionArea>

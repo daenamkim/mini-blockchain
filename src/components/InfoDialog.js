@@ -25,7 +25,7 @@ const InfoDialog = ({ title, open, onClose, info }) => (
       <DialogContent>
         <List>
           <ListItem button>
-            <ListItemText primary="Name" secondary={info.name} />
+            <ListItemText primary="Name" secondary={info.username} />
           </ListItem>
           <ListItem button>
             <ListItemText primary="Public Key" secondary={info.publicKey} />

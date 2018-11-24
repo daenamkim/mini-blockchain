@@ -36,21 +36,20 @@ class NavBar extends Component {
   };
 
   render() {
-    const { currentMenu, prevMenu, backToPrevMenu, classes } = this.props;
+    const { currentMenu, prevMenu, onBackToMenu, classes } = this.props;
     const { infoDialogOpen: open } = this.state;
 
-    // TODO:
     const userInfo = {
-      name: 'Daenam Kim',
-      publicKey: 'ksjr23lkasjfsdlkfj',
-      privateKey: 'zsdlfkjlkejrklw423423'
+      username: localStorage.getItem('username'),
+      publicKey: localStorage.getItem('publicKey'),
+      privateKey: localStorage.getItem('privateKey')
     };
     return (
       <div className="nav-bar">
         <AppBar position="static" color="primary">
           <Toolbar>
             {prevMenu !== MENU.NONE
-              ? <Button color="inherit" onClick={() => {backToPrevMenu(prevMenu)}}>
+              ? <Button color="inherit" onClick={() => {onBackToMenu(prevMenu)}}>
                 <ArrowBack></ArrowBack>
                 {prevMenu}
               </Button>

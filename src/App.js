@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import './App.css';
+import SignUp from './containers/SignUp';
 import Home from './containers/Home';
-import Blockchain from './containers/Blockchain';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: '',
+      publicKey: '',
+      privateKey: ''
+    };
+  }
+
   componentDidMount() {
-    // TODO: user name check and if no then show input
+    console.log("APP");
+    const username = localStorage.getItem('username');
+    const publicKey = localStorage.getItem('publicKey');
+    const privateKey = localStorage.getItem('privateKey');
+
+    if (!username) {
+      return;
+    }
+
+    if (!publicKey || !privateKey)  {
+      // TODO: Generate Private Key and Public Key
+      localStorage.setItem('publicKey', '1234publickey');
+      localStorage.setItem('privateKey', '1234privatekey');
+    }
+
+    this.setState({
+      username,
+      publicKey,
+      privateKey
+    });
   }
 
   render() {
+    const { username, publicKey, privateKey } = this.state;
+
     return (
-      <Router>
-        <div className="app">
-          <Link to="/home">Home</Link>
-          <Link to="/blockchain">Blockchain</Link>
-          {/* <Home />
-          <Blockchain /> */}
-          <Route path="/home" component={Home} />
-          <Route path="/blockchain" component={Blockchain} />
-        </div>
-      </Router>
+      <div className="app">
+        {username && publicKey && privateKey
+          ? <Home />
+          : <SignUp />
+        }
+      </div>
     );
   }
 }

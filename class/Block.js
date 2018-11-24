@@ -10,7 +10,12 @@ class Block {
   }
 
   calculateHash() {
-    return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.transactions) + this.nonce).toString();
+    return SHA256(
+      this.previousHash +
+      this.timestamp +
+      JSON.stringify(this.transactions) +
+      this.nonce
+    ).toString();
   }
 
   mineBlock(difficulty) {

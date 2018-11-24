@@ -13,7 +13,7 @@ class Blockchain {
     return new Block(Date.parse('2018-10-01'), 'Genesis Block. Yay!!', '0');
   }
 
-  geLatestBlock() {
+  getLatestBlock() {
     return this.chain[this.chain.length - 1];
   }
 
@@ -21,7 +21,7 @@ class Blockchain {
     const rewardTx = new Transaction(null, miningRewardAddress, this.miningReward);
     this.pendingTransactions.push(rewardTx);
 
-    let block = new Block(Date.now(), this.pendingTransactions, this.geLatestBlock().hash);
+    let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
     block.mineBlock(this.difficulty);
 
     console.log('Block successfully mined!');

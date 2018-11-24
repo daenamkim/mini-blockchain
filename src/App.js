@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 // import logo from './logo.svg';
-// import './App.css';
+import './App.css';
 import Home from './containers/Home';
 import Blockchain from './containers/Blockchain';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';

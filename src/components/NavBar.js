@@ -1,23 +1,75 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { ArrowBack } from '@material-ui/icons';
+import { ArrowBack, Info } from '@material-ui/icons';
 import { MENU } from '../constants';
+import InfoDialog from './InfoDialog';
 
-const NavBar = ({ currentMenu, prevMenu, backToPrevMenu }) => (
-  <div>
-    <AppBar position="static" color="primary">
-      <Toolbar>
-        {prevMenu !== MENU.NONE
-          ? <Button color="inherit" onClick={() => {backToPrevMenu(prevMenu)}}>
-            <ArrowBack></ArrowBack>
-            {prevMenu}
-          </Button>
-          : null
-        }
-        <Typography variant="h6" color="inherit">{currentMenu}</Typography>
-      </Toolbar>
-    </AppBar>
-  </div>
-);
+const styles = {
+  grow: {
+    flexGrow: 1,
+    textAlign: 'left',
+    marginLeft: 10
+  }
+};
 
-export default NavBar;
+class NavBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      infoDialogOpen: false
+    }
+  }
+
+  handleInfoDialogOpen = () => {
+    this.setState({
+      infoDialogOpen: true
+    });
+  };
+
+  handleInfoDialogClose = () => {
+    this.setState({
+      infoDialogOpen: false
+    });
+  };
+
+  render() {
+    const { currentMenu, prevMenu, backToPrevMenu, classes } = this.props;
+    const { infoDialogOpen: open } = this.state;
+
+    // TODO:
+    const userInfo = {
+      name: 'Daenam Kim',
+      publicKey: 'ksjr23lkasjfsdlkfj',
+      privateKey: 'zsdlfkjlkejrklw423423'
+    };
+    return (
+      <div className="nav-bar">
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            {prevMenu !== MENU.NONE
+              ? <Button color="inherit" onClick={() => {backToPrevMenu(prevMenu)}}>
+                <ArrowBack></ArrowBack>
+                {prevMenu}
+              </Button>
+              : null
+            }
+            <Typography variant="h6" color="inherit" className={classes.grow}>{currentMenu}</Typography>
+            <Button color="inherit" onClick={this.handleInfoDialogOpen}>
+              <Info />
+            </Button>
+          </Toolbar>
+          <InfoDialog title="User Information" open={open} onClose={this.handleInfoDialogClose} info={userInfo}/>
+        </AppBar>
+      </div>
+    );
+  }
+}
+
+NavBar.protoType = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(NavBar);

@@ -11,15 +11,15 @@ import {
   withMobileDialog
 } from '@material-ui/core';
 
-const InfoDialog = ({ title, open, onClose, info }) => (
-  <div className="info-dialog">
+const DialogUserInfo = ({ title, open, onClose, info }) => (
+  <div className="dialog-user-info">
     <Dialog
       fullWidth
       disableBackdropClick
       disableEscapeKeyDown
       scroll="paper"
       open={open}
-      aria-labelledby="info-dialog-title"
+      aria-labelledby="dialog-user-info-title"
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
@@ -44,4 +44,4 @@ const InfoDialog = ({ title, open, onClose, info }) => (
   </div>
 );
 
-export default withMobileDialog()(InfoDialog);
+export default withMobileDialog()(DialogUserInfo);

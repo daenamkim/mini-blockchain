@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
 import { ArrowBack, Info } from '@material-ui/icons';
 import { MENU } from '../constants';
-import InfoDialog from './InfoDialog';
+import DialogUserInfo from './DialogUserInfo';
 
 const styles = {
   grow: {
@@ -23,13 +23,13 @@ class NavBar extends Component {
     }
   }
 
-  handleInfoDialogOpen = () => {
+  handleDialogUserInfoOpen = () => {
     this.setState({
       infoDialogOpen: true
     });
   };
 
-  handleInfoDialogClose = () => {
+  handleDialogUserInfoClose = () => {
     this.setState({
       infoDialogOpen: false
     });
@@ -56,11 +56,16 @@ class NavBar extends Component {
               : null
             }
             <Typography variant="h6" color="inherit" className={classes.grow}>{currentMenu}</Typography>
-            <Button color="inherit" onClick={this.handleInfoDialogOpen}>
+            <IconButton color="inherit" onClick={this.handleDialogUserInfoOpen}>
               <Info />
-            </Button>
+            </IconButton>
           </Toolbar>
-          <InfoDialog title="User Information" open={open} onClose={this.handleInfoDialogClose} info={userInfo}/>
+          <DialogUserInfo
+            title="User Information"
+            open={open}
+            onClose={this.handleDialogUserInfoClose}
+            info={userInfo}
+          />
         </AppBar>
       </div>
     );

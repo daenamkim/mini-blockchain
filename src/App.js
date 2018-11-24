@@ -15,7 +15,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("APP");
     const username = localStorage.getItem('username');
     const publicKey = localStorage.getItem('publicKey');
     const privateKey = localStorage.getItem('privateKey');

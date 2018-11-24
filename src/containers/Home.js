@@ -6,6 +6,8 @@ import { MENU } from '../constants';
 import BlockList from '../components/BlockList';
 import TransactionList from '../components/TransactionList';
 import './Home.css';
+import DialogConfirm from '../components/DialogConfirm';
+import DialogTransaction from '../components/DialogTransaction';
 
 class Home extends Component {
   constructor(props) {
@@ -18,7 +20,12 @@ class Home extends Component {
       pendingTransactions: [],
       completeTransactions: [],
       blockIdSelected: null,
-      transactionIdSelected: null
+      transactionIdSelected: null,
+      dialogTitle: '',
+      dialogText: '',
+      dialogOpen: false,
+      dialogTxTitle: '',
+      dialogTxOpen: false
     }
   }
 
@@ -136,19 +143,23 @@ class Home extends Component {
   };
 
   handleBlockDelete = id => {
-    console.log("DELETE", id);
+    this.setState({
+      dialogOpen: true,
+      blockIdSelected: id,
+      dialogTitle: "Delete A Block",
+      dialogText: "All blocks will be removed from where you want to delete. Are you sure?"
+    });
   };
 
   handleBlockCreate = () => {
-    console.log("block create");
+    console.log("TODO: block create");
   };
 
   handleBlockCancel = () => {
-    console.log("block cancel");
+    console.log("TODO: block cancel");
   };
 
   handleTransactionSelect = id => {
-    console.log("TX SELECT", id);
     this.setState({
       prevMenu: MENU.HOME,
       currentMenu: MENU.TRANSACTION_DETAIL,
@@ -157,23 +168,56 @@ class Home extends Component {
   };
 
   handleTransactionDelete = id => {
-    console.log("TX DELETE", id);
+    this.setState({
+      dialogOpen: true,
+      transactionIdSelected: id,
+      dialogTitle: "Delete A Transaction",
+      dialogText: "This transaction will not be stored into the next block. Are you sure?"
+    });
   };
 
   handleTransactionCreate = () => {
-    console.log("tx create");
+    this.setState({
+      dialogTxTitle: 'New Transaction',
+      dialogTxOpen: true
+    });
+  };
+
+  handleDialogTransactionClose = (something) => {
+    console.log(something);
+    this.setState({
+      dialogTxOpen: false
+    });
+  };
+
+  handleDialogConfirmClose = select => {
+    console.log(select);
+    this.setState({
+      dialogOpen: false
+    });
   };
 
   render() {
-    const { blocks, pendingTransactions, completeTransactions } = this.state;
+    const {
+      blocks,
+      pendingTransactions,
+      completeTransactions,
+      dialogOpen,
+      dialogTitle,
+      dialogText,
+      blockIdSelected,
+      transactionIdSelected,
+      dialogTxOpen,
+      dialogTxTitle
+    } = this.state;
 
     let currentMenuView;
     switch (this.state.currentMenu) {
       case MENU.BLOCK_DETAIL:
-        currentMenuView = <BlockDetail />
+        currentMenuView = <BlockDetail id={blockIdSelected} />
         break;
       case MENU.TRANSACTION_DETAIL:
-        currentMenuView = <TransactionDetail />
+        currentMenuView = <TransactionDetail id={transactionIdSelected} />
         break;
       default:
         currentMenuView = <Fragment>
@@ -210,6 +254,17 @@ class Home extends Component {
         <div className="current-view">
           {currentMenuView}
         </div>
+        <DialogConfirm
+          title={dialogTitle}
+          text={dialogText}
+          open={dialogOpen}
+          onClose={this.handleDialogConfirmClose}
+        />
+        <DialogTransaction
+          title={dialogTxTitle}
+          open={dialogTxOpen}
+          onClose={this.handleDialogTransactionClose}
+        />
       </div>
     );
   }

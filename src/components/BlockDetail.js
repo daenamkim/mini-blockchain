@@ -1,8 +1,9 @@
 import React from 'react';
+import './BlockDetail.css';
 
-const BlockDetail = () => (
-  <div>
-    BlockDetail
+const BlockDetail = ({ id }) => (
+  <div className="block-detail">
+    BlockDetail: {id}
   </div>
 );
 

@@ -24,10 +24,6 @@ class SignUp extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log("SIGNUP");
-  }
-
   handleUsernameChange = event => {
     this.setState({
       username: event.target.value

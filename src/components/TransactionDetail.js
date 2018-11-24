@@ -1,8 +1,9 @@
 import React from 'react';
+import './TransactionDetail.css';
 
-const TransactionDetail = () => (
-  <div>
-    Transaction Detail
+const TransactionDetail = ({ id }) => (
+  <div className="transaction-detail">
+    Transaction Detail {id}
   </div>
 );
 

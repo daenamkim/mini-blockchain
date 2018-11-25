@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,7 @@ import {
   Button,
   List,
   ListItem,
-  ListItemText,
-  TextField
+  ListItemText
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 

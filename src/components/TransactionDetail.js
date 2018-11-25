@@ -1,5 +1,4 @@
-
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -11,7 +10,6 @@ import {
   TextField
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import { DIALOG } from '../constants';
 
 const styles = {
   forceWidth: {

@@ -1,8 +1,7 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import NavBar from '../components/NavBar';
 import BlockDetail from '../components/BlockDetail';
 import TransactionDetail from '../components/TransactionDetail';
-import { MENU } from '../constants';
 import BlockList from '../components/BlockList';
 import TransactionList from '../components/TransactionList';
 import './Home.css';

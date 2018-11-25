@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import SignUp from './containers/SignUp';
 import Home from './containers/Home';
+import { generateKeyPair } from './utils';
+import { STORAGE } from './constants';
 
 class App extends Component {
   constructor(props) {
@@ -15,18 +17,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const username = localStorage.getItem('username');
-    const publicKey = localStorage.getItem('publicKey');
-    const privateKey = localStorage.getItem('privateKey');
+    const username = localStorage.getItem(STORAGE.USERNAME);
+    const publicKey = localStorage.getItem(STORAGE.PUBLIC_KEY);
+    const privateKey = localStorage.getItem(STORAGE.PRIVATE_KEY);
 
-    if (!username) {
+    if (!username || !publicKey || !privateKey)  {
       return;
-    }
-
-    if (!publicKey || !privateKey)  {
-      // TODO: Generate Private Key and Public Key
-      localStorage.setItem('publicKey', '1234publickey');
-      localStorage.setItem('privateKey', '1234privatekey');
     }
 
     this.setState({
@@ -36,6 +32,18 @@ class App extends Component {
     });
   }
 
+  handleUsernameAdd = (event, username) => {
+    const keyPair = generateKeyPair();
+    localStorage.setItem(STORAGE.USERNAME, username);
+    localStorage.setItem(STORAGE.PUBLIC_KEY, keyPair.publicKey);
+    localStorage.setItem(STORAGE.PRIVATE_KEY, keyPair.privateKey);
+    this.setState({
+      username,
+      publicKey: keyPair.publicKey,
+      privateKey: keyPair.privateKey
+    });
+  };
+
   render() {
     const { username, publicKey, privateKey } = this.state;
 
@@ -43,7 +51,7 @@ class App extends Component {
       <div className="app">
         {username && publicKey && privateKey
           ? <Home />
-          : <SignUp />
+          : <SignUp onAddUsername={this.handleUsernameAdd} />
         }
       </div>
     );

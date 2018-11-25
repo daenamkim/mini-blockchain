@@ -31,10 +31,10 @@ class SignUp extends Component {
   };
 
   handleUsernameSave = event => {
-    localStorage.setItem('username', this.state.username);
-    this.props.history.replace('/blockchain');
+    const { onAddUsername } = this.props;
+    const { username } = this.state;
+    onAddUsername(event, username);
   };
-
 
   render() {
     const { username } = this.state;

@@ -11,7 +11,7 @@ export const STORAGE = {
   USERNAME: 'username',
   PUBLIC_KEY: 'publicKey',
   PRIVATE_KEY: 'privateKey',
-  BLOCKS: 'blocks',
-  PENDING_TXS: 'pendingTxs',
+  CHAIN: 'chain',
+  PENDING_TRANSACTIONS: 'pendingTransactions',
   DIFFICULTY: 'difficulty'
 };

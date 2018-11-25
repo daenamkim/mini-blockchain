@@ -47,7 +47,7 @@ const styles = {
 const BlockList = ({
   classes,
   title,
-  blocks,
+  chain,
   onSelectBlock,
   onDeleteBlock,
   onCancelBlock,
@@ -56,7 +56,7 @@ const BlockList = ({
   <div className="block-list">
     <AppBar position="static" color="default">
       <Toolbar className={classes.flex}>
-        <Badge badgeContent={blocks.length || 0} color="primary">
+        <Badge badgeContent={chain.length || 0} color="primary">
           <span></span>
         </Badge>
         <div className={classes.typographyGrow}>
@@ -85,31 +85,31 @@ const BlockList = ({
       </Toolbar>
     </AppBar>
     <ul >
-      {blocks.map((item, index) =>
+      {chain.map((block, index) =>
         <li key={index} className="block-list--item">
-          <Card className={classes[item.isValid]}>
+          <Card className={classes[block.isValid() ? 'valid' : 'invalid']}>
             <CardActionArea
               className={classes.flex}
               component="div"
-              onClick={event => { event.stopPropagation(); onSelectBlock(item.id);}}
+              onClick={event => { event.stopPropagation(); onSelectBlock(index);}}
             >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">
-                  {item.hash}
+                  Hash: {block.hash || 'No hash'}
                 </Typography>
                 <Typography component="p">
-                  PrevHash: {item.prevHash}
+                  Previous Hash: {block.previousHash}
                 </Typography>
                 <Typography component="p">
-                  {item.time}
+                  {Date(block.timestamp)}
                 </Typography>
               </CardContent>
-              <IconButton
+              {/* <IconButton
                 aria-label="Delete"
-                onClick={event => { event.stopPropagation(); onDeleteBlock(item.id);}}
+                onClick={event => { event.stopPropagation(); onDeleteBlock(index);}}
               >
                 <DeleteIcon fontSize="small" />
-              </IconButton>
+              </IconButton> */}
             </CardActionArea>
           </Card>
         </li>

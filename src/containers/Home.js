@@ -6,15 +6,16 @@ import BlockList from '../components/BlockList';
 import TransactionList from '../components/TransactionList';
 import './Home.css';
 import Confirm from '../components/Confirm';
-import { DIALOG } from '../constants';
+import { DIALOG, STORAGE } from '../constants';
+import Blockchain from '../blockchain/Blockchain';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      blocks: [],
-      coins: 'TODO: 200',
+      chain: [],
+      balance: 0,
       pendingTransactions: [],
       completeTransactions: [],
       blockIdSelected: null,
@@ -22,110 +23,36 @@ class Home extends Component {
       dialogTitle: '',
       dialogText: '',
       dialogOpen: DIALOG.CLOSE,
-    }
+      blockSelected: {
+        hash: '',
+        previousHash: '',
+        transactions: [],
+        timestamp: 0
+      }
+    };
+
+    this.blockchain = null;
   }
 
   componentDidMount() {
-    const blocks = [
-      {
-        id: '1231',
-        hash: 'asdlfsdfasd',
-        prevHash: 'asdfasdfs',
-        time: Date(),
-        isValid: 'invalid'
-      },
-      {
-        id: '1231',
-        hash: 'asdfasdfs',
-        prevHash: 'asdasdf13fasdfafasdfs',
-        time: Date(),
-        isValid: 'valid'
-      },
-      {
-        id: '1231',
-        hash: 'asdasdf13fasdfafasdfs',
-        prevHash: 'asasf1231231323dfasdfs',
-        time: Date(),
-        isValid: 'valid'
-      },
-      {
-        id: '1231',
-        hash: 'asasf1231231323dfasdfs',
-        prevHash: 'asd12312312313123139876trfasdfs',
-        time: Date(),
-        isValid: 'valid'
-      },
-      {
-        hash: 'asd12312312313123139876trfasdfs',
-        prevHash: 'asdfasdfassadfasfasdfsaasdfs',
-        time: Date(),
-        isValid: 'valid'
-      }
-    ];
-    const pendingTransactions = [
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 200,
-        time: Date()
-      },
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 12,
-        time: Date()
-      },
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 33,
-        time: Date()
-      }
-    ];
-    const completeTransactions = [
-      {
-        id: '1231',
-        from: 'asldfjasfjasdfjsakdfjsalj',
-        to: 'asdfasdfsadas',
-        amount: 55,
-        time: Date()
-      },
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 12,
-        time: Date()
-      },
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 200,
-        time: Date()
-      },
-      {
-        id: '1231',
-        from: 'asdfasdfsadas',
-        to: 'asldfjasfjasdfjsakdfjsalj',
-        amount: 33,
-        time: Date()
-      }
-    ];
+    const difficulty = localStorage.getItem(STORAGE.DIFFICULTY) || 2;
+    const chain = localStorage.getItem(STORAGE.CHAIN) || [];
+    const pendingTransactions = localStorage.getItem(STORAGE.PENDING_TRANSACTIONS) || [];
+    const miningReward = 100;
+
+    this.blockchain = new Blockchain({difficulty, chain, pendingTransactions, miningReward});
+    const balance = this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
-      blocks,
+      balance,
+      difficulty,
+      chain: this.blockchain.chain, // For the first time with a genesis block.
       pendingTransactions,
-      completeTransactions
     });
   }
 
   handleBlockSelect = id => {
-    console.log("SELECT", id);
     this.setState({
-      blockIdSelected: id,
+      blockSelected: this.blockchain.chain[id],
       dialogOpen: DIALOG.BLOCK_DETAIL
     });
   };
@@ -192,22 +119,23 @@ class Home extends Component {
 
   render() {
     const {
-      blocks,
-      coins,
+      chain,
+      balance,
       pendingTransactions,
       completeTransactions,
       dialogOpen,
       dialogTitle,
       dialogText,
+      blockSelected
     } = this.state;
 
     return (
       <div className="home">
-        <NavBar title="Mini Blockchain" coins={coins} />
+        <NavBar title="Mini Blockchain" balance={balance} />
         <div className="current-view">
           <BlockList
             title="Blocks"
-            blocks={blocks}
+            chain={chain}
             onSelectBlock={this.handleBlockSelect}
             onDeleteBlock={this.handleBlockDelete}
             onCancelBlock={this.handleBlockCancel}
@@ -241,6 +169,7 @@ class Home extends Component {
         />
         <BlockDetail
           title="Block Detail"
+          block={blockSelected}
           open={dialogOpen === DIALOG.BLOCK_DETAIL}
           onClose={this.handleBlockDetailClose}
         />

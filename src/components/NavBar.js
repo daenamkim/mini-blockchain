@@ -66,7 +66,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { title, classes } = this.props;
+    const { title, classes, balance } = this.props;
     const { dialogOpen, difficulty } = this.state;
 
     const userInfo = {
@@ -79,7 +79,7 @@ class NavBar extends Component {
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
-            <Typography variant="h6" color="inherit" >TODO: 200 coins</Typography>
+            <Typography variant="h6" color="inherit" >{balance} Coins</Typography>
             <IconButton
               color="inherit"
               onClick={this.handleSettingsOpen}

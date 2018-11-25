@@ -18,7 +18,7 @@ const styles = {
   }
 };
 
-const BlockDetail = ({ title, open, onClose, classes }) => (
+const BlockDetail = ({ title, open, onClose, block }) => (
   <div className="dialog-confirm">
     <Dialog
       fullWidth
@@ -31,22 +31,24 @@ const BlockDetail = ({ title, open, onClose, classes }) => (
       <DialogContent>
         <List>
           <ListItem button>
-            <ListItemText primary="Hash" secondary="TODO: hash string" />
+            <ListItemText primary="Hash" secondary={block.hash || 'No hash'} />
           </ListItem>
           <ListItem button>
-            <ListItemText primary="Previous Hash" secondary="TODO: hash string" />
+            <ListItemText primary="Previous Hash" secondary={block.previousHash || 'No hash'} />
           </ListItem>
           <ListItem button>
-            <ListItemText primary="Time" secondary={`TODO: ${Date()}`} />
+            <ListItemText primary="Time" secondary={Date(block.timestamp)} />
           </ListItem>
+          {block.transactions.map((transaction, index) =>
+            <ListItem button key={index}>
+              <ListItemText primary={`Transaction ${index}`} secondary={transaction} />
+            </ListItem>
+          )}
         </List>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={() => {onClose('cancel');}}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={() => {onClose('create', {});}}>
-          Create
+        <Button color="inherit" onClick={onClose}>
+          Close
         </Button>
       </DialogActions>
     </Dialog>

@@ -10,7 +10,7 @@ import {
   withMobileDialog
 } from '@material-ui/core';
 
-const DialogConfirm = ({ title, open, onClose, text }) => (
+const Confirm = ({ title, open, onClose, text }) => (
   <div className="dialog-confirm">
     <Dialog
       fullWidth
@@ -30,12 +30,12 @@ const DialogConfirm = ({ title, open, onClose, text }) => (
         <Button color="inherit" onClick={() => {onClose('cancel');}}>
           Cancel
         </Button>
-        <Button color="inherit" onClick={() => {onClose('yes');}}>
-          Yes
+        <Button color="secondary" onClick={() => {onClose('delete');}}>
+          Delete
         </Button>
       </DialogActions>
     </Dialog>
   </div>
 );
 
-export default withMobileDialog()(DialogConfirm);
+export default withMobileDialog()(Confirm);

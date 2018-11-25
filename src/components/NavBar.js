@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
-import { ArrowBack, Info } from '@material-ui/icons';
-import { MENU } from '../constants';
-import DialogUserInfo from './DialogUserInfo';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton
+} from '@material-ui/core';
+import {
+  AccountCircle as AccountCircleIcon,
+  Settings as SettingsIcon
+} from '@material-ui/icons';
+import User from './User';
+import Settings from './Settings';
+import { DIALOG } from '../constants';
 
 const styles = {
   grow: {
@@ -19,25 +28,46 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      infoDialogOpen: false
+      dialogOpen: DIALOG.CLOSE,
+      difficulty: 2, // TODO: get this from local storage
     }
   }
 
-  handleDialogUserInfoOpen = () => {
+  handleSettingsOpen = () => {
+    console.log("123");
     this.setState({
-      infoDialogOpen: true
+      dialogOpen: DIALOG.SETTINGS
     });
   };
 
-  handleDialogUserInfoClose = () => {
+  handleSettingsClose = settings => {
     this.setState({
-      infoDialogOpen: false
+      dialogOpen: DIALOG.CLOSE
+    });
+  }
+
+  handleDifficultyChange = (event, difficulty) => {
+    console.log(difficulty)
+    this.setState({
+      difficulty
+    });
+  };
+
+  handleUserOpen = () => {
+    this.setState({
+      dialogOpen: DIALOG.USER
+    });
+  };
+
+  handleUserClose = () => {
+    this.setState({
+      dialogOpen: DIALOG.CLOSE
     });
   };
 
   render() {
-    const { currentMenu, prevMenu, onBackToMenu, classes } = this.props;
-    const { infoDialogOpen: open } = this.state;
+    const { title, classes } = this.props;
+    const { dialogOpen, difficulty } = this.state;
 
     const userInfo = {
       username: localStorage.getItem('username'),
@@ -48,23 +78,33 @@ class NavBar extends Component {
       <div className="nav-bar">
         <AppBar position="static" color="primary">
           <Toolbar>
-            {prevMenu !== MENU.NONE
-              ? <Button color="inherit" onClick={() => {onBackToMenu(prevMenu)}}>
-                <ArrowBack></ArrowBack>
-                {prevMenu}
-              </Button>
-              : null
-            }
-            <Typography variant="h6" color="inherit" className={classes.grow}>{currentMenu}</Typography>
-            <IconButton color="inherit" onClick={this.handleDialogUserInfoOpen}>
-              <Info />
+            <Typography variant="h6" color="inherit" className={classes.grow}>{title}</Typography>
+            <Typography variant="h6" color="inherit" >TODO: 200 coins</Typography>
+            <IconButton
+              color="inherit"
+              onClick={this.handleSettingsOpen}
+            >
+              <SettingsIcon />
+            </IconButton>
+            <IconButton
+              color="inherit"
+              onClick={this.handleUserOpen}
+            >
+              <AccountCircleIcon />
             </IconButton>
           </Toolbar>
-          <DialogUserInfo
-            title="User Information"
-            open={open}
-            onClose={this.handleDialogUserInfoClose}
+          <User
+            title="User"
+            open={dialogOpen === DIALOG.USER}
+            onClose={this.handleUserClose}
             info={userInfo}
+          />
+          <Settings
+            title="Settings"
+            open={dialogOpen === DIALOG.SETTINGS}
+            onClose={this.handleSettingsClose}
+            difficulty={difficulty}
+            onChangeDifficulty={this.handleDifficultyChange}
           />
         </AppBar>
       </div>

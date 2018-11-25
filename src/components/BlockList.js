@@ -11,7 +11,10 @@ import {
   Badge,
   IconButton
 } from '@material-ui/core';
-import { Delete as DeleteIcon, Add as AddIcon } from '@material-ui/icons';
+import {
+  Delete as DeleteIcon,
+  Add as AddIcon,
+} from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import './BlockList.css';
 
@@ -22,7 +25,7 @@ const styles = {
   typographyGrow: {
     flexGrow: 1,
     textAlign: 'left',
-    marginLeft: 20
+    marginLeft: 20,
   },
   cardGrow: {
     flexGrow: 1
@@ -56,14 +59,21 @@ const BlockList = ({
         <Badge badgeContent={blocks.length || 0} color="primary">
           <span></span>
         </Badge>
-        <Typography
-          variant="h6"
+        <div className={classes.typographyGrow}>
+          <Typography
+            variant="h6"
+              color="inherit"
+          >
+            {title}
+          </Typography>
+        </div>
+        <Button
+          aria-label="Cancel"
           color="inherit"
-          className={classes.typographyGrow}
+          onClick={onCancelBlock}
         >
-          {title}
-        </Typography>
-        <Button aria-label="Cancel" color="inherit" onClick={onCancelBlock}>Cancel</Button>
+          Cancel
+        </Button>
         <Button
           variant="fab"
           color="primary"

@@ -11,7 +11,7 @@ import {
   withMobileDialog
 } from '@material-ui/core';
 
-const DialogUserInfo = ({ title, open, onClose, info }) => (
+const User = ({ title, open, onClose, info }) => (
   <div className="dialog-user-info">
     <Dialog
       fullWidth
@@ -44,4 +44,4 @@ const DialogUserInfo = ({ title, open, onClose, info }) => (
   </div>
 );
 
-export default withMobileDialog()(DialogUserInfo);
+export default withMobileDialog()(User);

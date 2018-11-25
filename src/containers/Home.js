@@ -8,6 +8,8 @@ import './Home.css';
 import Confirm from '../components/Confirm';
 import { DIALOG, STORAGE } from '../constants';
 import Blockchain from '../blockchain/Blockchain';
+import Block from '../blockchain/Block';
+import Transaction from '../blockchain/Transaction';
 
 class Home extends Component {
   constructor(props) {
@@ -36,11 +38,34 @@ class Home extends Component {
 
   componentDidMount() {
     const difficulty = localStorage.getItem(STORAGE.DIFFICULTY) || 2;
-    const chain = localStorage.getItem(STORAGE.CHAIN) || [];
+    const chain = JSON.parse(localStorage.getItem(STORAGE.CHAIN)) || [];
     const pendingTransactions = localStorage.getItem(STORAGE.PENDING_TRANSACTIONS) || [];
     const miningReward = 100;
 
-    this.blockchain = new Blockchain({difficulty, chain, pendingTransactions, miningReward});
+    // Recover chain (blocks and transactions) with REAL classes.
+    const chainRecovered = chain.map(block => {
+      const { timestamp, transactions, previousHash, nonce, hash } = block;
+      const transactionsRecovered = transactions.map(transaction => {
+        let transactionRecovered;
+        if (transaction.fromAddress === undefined) {
+          transactionRecovered = transaction;
+        } else {
+          const { fromAddress, toAddress, amount, signature } = transaction;
+          transactionRecovered = new Transaction(fromAddress, toAddress, amount);
+          transactionRecovered.signature = signature;
+        }
+
+        return transactionRecovered;
+      });
+
+      const blockRecovered = new Block(timestamp, transactionsRecovered, previousHash);
+      blockRecovered.nonce = nonce;
+      blockRecovered.hash = hash;
+
+      return blockRecovered;
+    });
+    console.log("TO BLOCKCHAIN", chainRecovered);
+    this.blockchain = new Blockchain({difficulty, chain: chainRecovered, pendingTransactions, miningReward});
     const balance = this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       balance,
@@ -50,7 +75,8 @@ class Home extends Component {
     });
   }
 
-  handleBlockSelect = id => {
+  handleBlockSelect = (event, id, some) => {
+    console.log(some);
     this.setState({
       blockSelected: this.blockchain.chain[id],
       dialogOpen: DIALOG.BLOCK_DETAIL
@@ -73,7 +99,13 @@ class Home extends Component {
   };
 
   handleBlockCreate = () => {
-    console.log("TODO: block create");
+    // TODO: promise?
+    this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
+    this.setState({
+      chain: this.blockchain.chain
+    }, () => {
+      localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
+    });
   };
 
   handleBlockCancel = () => {

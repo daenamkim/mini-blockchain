@@ -41,7 +41,7 @@ const BlockDetail = ({ title, open, onClose, block }) => (
           </ListItem>
           {block.transactions.map((transaction, index) =>
             <ListItem button key={index}>
-              <ListItemText primary={`Transaction ${index}`} secondary={transaction} />
+              <ListItemText primary={`Transaction ${index}`} secondary={JSON.stringify(transaction)} />
             </ListItem>
           )}
         </List>

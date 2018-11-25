@@ -91,7 +91,7 @@ const BlockList = ({
             <CardActionArea
               className={classes.flex}
               component="div"
-              onClick={event => { event.stopPropagation(); onSelectBlock(index);}}
+              onClick={event => { event.stopPropagation(); onSelectBlock(event, index, chain);}}
             >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">
@@ -101,7 +101,7 @@ const BlockList = ({
                   Previous Hash: {block.previousHash}
                 </Typography>
                 <Typography component="p">
-                  {Date(block.timestamp)}
+                  {new Date(block.timestamp).toString()}
                 </Typography>
               </CardContent>
               {/* <IconButton

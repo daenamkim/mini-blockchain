@@ -1,6 +1,6 @@
 .block-list {
   padding: 20px;
-  flex-grow: 1;
+  width: 31%;
 }
 
 .block-list--item {

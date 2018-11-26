@@ -25,6 +25,7 @@ class Home extends Component {
       balance: 0,
       pendingTransactions: [],
       completeTransactions: [],
+      blockIdSelected: null,
       transactionIdSelected: null,
       isMining: false,
       dialogTitle: '',
@@ -105,14 +106,28 @@ class Home extends Component {
 
   handleBlockSelect = ({ id }) => {
     this.setState({
+      blockIdSelected: id,
       blockSelected: this.blockchain.chain[id],
       dialogOpen: DIALOG.BLOCK_DETAIL
     });
   };
 
-  handleBlockDetailClose = () => {
+  handleBlockDetailClose = ({ newBlock: block, index }) => {
+    const newTransactions = block.transactions.map(transaction => {
+      const newTransaction = new Transaction(transaction.fromAddress, transaction.toAddress, transaction.amount);
+      newTransaction.signature = transaction.signature;
+      return newTransaction;
+    });
+    const newBlock = new Block(block.timestamp, newTransactions, block.previousHash);
+    newBlock.hash = block.hash;
+    newBlock.nonce = block.nonce;
+
+    this.blockchain.chain[index] = newBlock;
+
+    // TODO: Why newBlock is applied to the block.
     this.setState({
-      dialogOpen: DIALOG.CLOSE
+      dialogOpen: DIALOG.CLOSE,
+      isChainValid: this.blockchain.isChainValid()
     });
   };
 
@@ -257,7 +272,8 @@ class Home extends Component {
       blockSelected,
       transactionSelected,
       difficulty,
-      isMining
+      isMining,
+      blockIdSelected
     } = this.state;
 
     return (
@@ -312,6 +328,7 @@ class Home extends Component {
         <BlockDetail
           title="Block Detail"
           isEditable={false}
+          blockIdSelected={blockIdSelected}
           block={blockSelected}
           open={dialogOpen === DIALOG.BLOCK_DETAIL}
           onClose={this.handleBlockDetailClose}

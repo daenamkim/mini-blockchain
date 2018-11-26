@@ -200,9 +200,9 @@ class Home extends Component {
     switch (type) {
       case 'create':
         const newTransaction = new Transaction(transaction.fromAddress, transaction.toAddress, transaction.amount);
-        const publicKey = ec.keyFromPrivate(localStorage.getItem(STORAGE.PRIVATE_KEY));
+        const signingKey = ec.keyFromPrivate(localStorage.getItem(STORAGE.PRIVATE_KEY));
         // Signing a transaction.
-        newTransaction.signTransaction(publicKey);
+        newTransaction.signTransaction(signingKey);
         this.blockchain.pendingTransactions.push(newTransaction);
         this.setState({
           pendingTransactions: this.blockchain.pendingTransactions,

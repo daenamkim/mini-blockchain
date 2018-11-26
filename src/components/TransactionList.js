@@ -87,7 +87,7 @@ const TransactionList = ({
     <ul >
       {transactions.map((transaction, index) =>
         <li key={index} className="transaction-list--item">
-          <Card className={classes[isPendingList ? {} : myAddress === transaction.toAddress ? 'deposit' : 'withdraw']}>
+          <Card className={classes[isPendingList || !transaction.toAddress ? {} : myAddress === transaction.toAddress ? 'deposit' : 'withdraw']}>
             <CardActionArea
               className={classes.flex}
               component="div"

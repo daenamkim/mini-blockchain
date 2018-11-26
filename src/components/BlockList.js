@@ -9,6 +9,10 @@ import {
   Toolbar,
   Button,
   Badge,
+  List,
+  ListItem,
+  ListItemText,
+  TextField
 } from '@material-ui/core';
 import {
   Add as AddIcon,
@@ -43,6 +47,9 @@ const styles = {
   },
   sync: {
     animation: 'rotate 2s linear infinite'
+  },
+  fullWidth: {
+    width: '100%'
   }
 }
 
@@ -91,19 +98,32 @@ const BlockList = ({
               component="div"
               onClick={event => {
                 event.stopPropagation();
-                onSelectBlock({event, index});
+                onSelectBlock({event, id: index});
               }}
             >
               <CardContent className={classes.cardGrow}>
-                <Typography variant="h6" component="h3">
-                  Hash: {block.hash || 'No hash'}
-                </Typography>
-                <Typography component="p">
-                  Previous Hash: {block.previousHash}
-                </Typography>
-                <Typography component="p">
-                  {new Date(block.timestamp).toString()}
-                </Typography>
+                <List>
+                  <ListItem>
+                    <div className={classes.fullWidth}>
+                    <ListItemText primary="Hash" />
+                    <TextField
+                      fullWidth
+                      disabled
+                      value={block.hash || 'No hash'}
+                    />
+                    </div>
+                  </ListItem>
+                  <ListItem>
+                    <div className={classes.fullWidth}>
+                    <ListItemText primary="Previous Hash" />
+                    <TextField
+                      fullWidth
+                      disabled
+                      value={block.previousHash || 'No hash'}
+                    />
+                    </div>
+                  </ListItem>
+                </List>
               </CardContent>
             </CardActionArea>
           </Card>

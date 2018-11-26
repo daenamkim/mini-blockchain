@@ -21,7 +21,6 @@ class Home extends Component {
       balance: 0,
       pendingTransactions: [],
       completeTransactions: [],
-      blockIdSelected: null,
       transactionIdSelected: null,
       isMining: false,
       dialogTitle: '',
@@ -112,15 +111,6 @@ class Home extends Component {
     });
   };
 
-  handleBlockDelete = id => {
-    this.setState({
-      dialogOpen: DIALOG.CONFIRM,
-      blockIdSelected: id,
-      dialogTitle: "Delete A Block",
-      dialogText: "All blocks will be removed from where you want to delete. Are you sure?"
-    });
-  };
-
   handleBlockCreate = async () => {
     this.setState({
       isMining: true
@@ -133,6 +123,7 @@ class Home extends Component {
     });
 
     const { enqueueSnackbar } = this.props;
+    // TODO: Improve here because while loop never yield resource.
     this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       pendingTransactions: this.blockchain.pendingTransactions,
@@ -155,7 +146,6 @@ class Home extends Component {
   };
 
   handleTransactionSelect = ({ id, type }) => {
-    console.log(id, this.state.completeTransactions, this.state.completeTransactions[id])
     if (type === 'pending') {
       this.setState({
         transactionSelected: this.state.pendingTransactions[id],
@@ -169,7 +159,7 @@ class Home extends Component {
     }
   };
 
-  handleTransactionDelete = id => {
+  handleTransactionDelete = ({ id }) => {
     this.setState({
       dialogOpen: DIALOG.CONFIRM,
       transactionIdSelected: id,
@@ -185,7 +175,7 @@ class Home extends Component {
     });
   };
 
-  handleTransactionDetailClose = (event, type, transaction) => {
+  handleTransactionDetailClose = ({ type, transaction }) => {
     switch (type) {
       case 'create':
         const newTransaction = new Transaction(transaction.fromAddress, transaction.toAddress, transaction.amount);
@@ -205,9 +195,17 @@ class Home extends Component {
   };
 
   handleConfirmClose = ({ type }) => {
-    console.log(type);
+    if (type === 'delete') {
+      this.blockchain.pendingTransactions = this.blockchain.pendingTransactions.filter((_, index) =>
+        index !== this.state.transactionIdSelected
+      );
+    }
+
     this.setState({
-      dialogOpen: DIALOG.CLOSE
+      dialogOpen: DIALOG.CLOSE,
+      pendingTransactions: this.blockchain.pendingTransactions
+    }, () => {
+      localStorage.setItem(STORAGE.PENDING_TRANSACTIONS, JSON.stringify(this.blockchain.pendingTransactions));
     });
   };
 
@@ -219,7 +217,6 @@ class Home extends Component {
       chain: this.blockchain.chain,
       balance: 0,
       completeTransactions: this.blockchain.getCompleteTransactions(),
-      blockIdSelected: null,
       transactionIdSelected: null,
       blockSelected: {
         hash: '',
@@ -274,7 +271,6 @@ class Home extends Component {
             title="Blocks"
             chain={chain}
             onSelectBlock={this.handleBlockSelect}
-            onDeleteBlock={this.handleBlockDelete}
             onCreateBlock={this.handleBlockCreate}
             isMining={isMining}
           />

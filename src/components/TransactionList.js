@@ -9,7 +9,11 @@ import {
   Toolbar,
   Button,
   Badge,
-  IconButton
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  TextField
 } from '@material-ui/core';
 import { Delete as DeleteIcon, Add as AddIcon } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -32,6 +36,9 @@ const styles = {
     minHeight: 40,
     width: 40,
     height: 40
+  },
+  fullWidth: {
+    width: '100%'
   }
 }
 
@@ -71,9 +78,9 @@ const TransactionList = ({
       </Toolbar>
     </AppBar>
     <ul >
-      {transactions.map((item, index) =>
+      {transactions.map((transaction, index) =>
         <li key={index} className="transaction-list--item">
-          <Card className={classes[item.isValid]}>
+          <Card className={classes[transaction.isValid]}>
             <CardActionArea
               className={classes.flex}
               component="div"
@@ -87,23 +94,26 @@ const TransactionList = ({
               }}
             >
               <CardContent className={classes.cardGrow}>
-                <Typography variant="h6" component="h3">
-                  From: {item.fromAddress}
-                </Typography>
-                <Typography variant="h6" component="h3">
-                  To: {item.toAddress}
-                </Typography>
-                <Typography component="p">
-                  Amount: {item.amount} Coins
-                </Typography>
-                <Typography component="p">
-                  {item.time}
-                </Typography>
+                <List>
+                  <ListItem>
+                    <div className={classes.fullWidth}>
+                      <ListItemText primary="Amount" />
+                      <TextField
+                        fullWidth
+                        disabled
+                        value={`${transaction.amount || 0} Coins`}
+                      />
+                    </div>
+                  </ListItem>
+                </List>
               </CardContent>
               {isPendingList
                 ? <IconButton
                     aria-label="Delete"
-                    onClick={(event) => {event.stopPropagation(); onDeleteTransaction(item.id);}}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onDeleteTransaction({event, id: index});
+                    }}
                   >
                     <DeleteIcon fontSize="small" />
                   </IconButton>

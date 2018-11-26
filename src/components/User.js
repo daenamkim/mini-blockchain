@@ -32,12 +32,20 @@ const User = ({ title, open, onClose, info, classes }) => (
       <DialogContent>
         <List>
           <ListItem button>
-            <ListItemText primary="Name" secondary={info.username} />
+            <div className={classes.fullWidth}>
+              <ListItemText primary="Name" />
+              <TextField
+                disabled
+                fullWidth
+                value={info.username}
+              />
+            </div>
           </ListItem>
           <ListItem button>
             <div className={classes.fullWidth}>
               <ListItemText primary="Public Key" />
               <TextField
+                disabled
                 fullWidth
                 value={info.publicKey}
               />
@@ -47,6 +55,7 @@ const User = ({ title, open, onClose, info, classes }) => (
             <div className={classes.fullWidth}>
               <ListItemText primary="Private Key" />
               <TextField
+                disabled
                 fullWidth
                 value={info.privateKey}
               />

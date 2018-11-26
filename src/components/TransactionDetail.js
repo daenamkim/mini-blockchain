@@ -7,12 +7,13 @@ import {
   Button,
   List,
   ListItem,
-  TextField
+  TextField,
+  ListItemText
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
-  forceWidth: {
+  fullWidth: {
     width: '100%'
   }
 };
@@ -74,45 +75,54 @@ class TransactionDetail extends Component {
           <DialogContent>
             <List>
               <ListItem>
-                <TextField
-                  className={classes.forceWidth}
-                  label="From"
-                  value={!isEditable ? transaction.fromAddress : fromAddress}
-                  disabled
-                />
+                <div className={classes.fullWidth}>
+                  <ListItemText primary="From Address" />
+                  <TextField
+                    fullWidth
+                    value={(!isEditable ? transaction.fromAddress : fromAddress) || 'No address'}
+                    disabled
+                  />
+                </div>
               </ListItem>
               <ListItem>
-                <TextField
-                  className={classes.forceWidth}
-                  label="To"
-                  value={!isEditable ? transaction.toAddress : toAddress}
-                  onChange={this.handleToChange}
-                  disabled={!isEditable}
-                />
+                <div className={classes.fullWidth}>
+                  <ListItemText primary="To Address" />
+                  <TextField
+                    fullWidth
+                    value={(!isEditable ? transaction.toAddress : toAddress) || (isEditable ? '' : 'No address')}
+                    onChange={this.handleToChange}
+                    disabled={!isEditable}
+                  />
+                </div>
               </ListItem>
               <ListItem>
-                <TextField
-                  className={classes.forceWidth}
-                  label="Amount"
-                  value={!isEditable ? transaction.amount : amount}
-                  onChange={this.handleAmountChange}
-                  placeholder="Input a integer number only."
-                  disabled={!isEditable}
-                />
+                <div className={classes.fullWidth}>
+                  <ListItemText primary="Amount" />
+                  <TextField
+                    fullWidth
+                    value={(!isEditable ? transaction.amount : amount) || (isEditable ? 0 : 'No value')}
+                    onChange={this.handleAmountChange}
+                    disabled={!isEditable}
+                  />
+                </div>
               </ListItem>
             </List>
           </DialogContent>
           <DialogActions>
             <Button
               color="inherit"
-              onClick={event => {onClose(event, 'cancel');}}
+              onClick={event => {
+                onClose({event, type: 'cancel'});
+              }}
             >
               Cancel
             </Button>
             {isEditable
               ? <Button
                 color="primary"
-                onClick={event => {onClose(event, 'create', {fromAddress, toAddress, amount});}}
+                onClick={event => {
+                  onClose({event, type: 'create', transaction: {fromAddress, toAddress, amount}});
+                }}
                 disabled={amount < 1 || toAddress.length < 1}
                 >
                   Create

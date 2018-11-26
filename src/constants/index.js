@@ -15,3 +15,5 @@ export const STORAGE = {
   PENDING_TRANSACTIONS: 'pendingTransactions',
   DIFFICULTY: 'difficulty'
 };
+
+// TODO: Collect every constant from codes and define here.

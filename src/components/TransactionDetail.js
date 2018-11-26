@@ -106,6 +106,19 @@ class TransactionDetail extends Component {
                   />
                 </div>
               </ListItem>
+              {!isEditable
+              ? <ListItem>
+                  <div className={classes.fullWidth}>
+                    <ListItemText primary="Signature" />
+                    <TextField
+                      fullWidth
+                      value={transaction.signature || 'No signature'}
+                      disabled
+                    />
+                  </div>
+                </ListItem>
+              : null
+            }
             </List>
           </DialogContent>
           <DialogActions>

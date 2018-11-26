@@ -27,6 +27,15 @@ class TransactionDetail extends Component {
     };
   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.isEditable) {
+      this.setState({
+        toAddress: '',
+        amount: 0
+      });
+    }
+  }
+
   handleAmountChange = event => {
     const amount = Number.parseInt(event.target.value) || 0;
     console.log(amount);

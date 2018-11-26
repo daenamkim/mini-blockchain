@@ -45,15 +45,24 @@ class Home extends Component {
   componentDidMount() {
     const difficulty = localStorage.getItem(STORAGE.DIFFICULTY) || 2;
     const chain = JSON.parse(localStorage.getItem(STORAGE.CHAIN)) || [];
-    const pendingTransactions = localStorage.getItem(STORAGE.PENDING_TRANSACTIONS) || [];
+    const pendingTransactions = JSON.parse(localStorage.getItem(STORAGE.PENDING_TRANSACTIONS)) || [];
     const miningReward = 100;
 
     // Restore chain (blocks and transactions) with REAL classes.
+    const pendingTransactionsRestored = pendingTransactions.map(pendingTransaction => {
+      let pendingTransactionsRestored;
+      const { fromAddress, toAddress, amount, signature } = pendingTransaction;
+      pendingTransactionsRestored = new Transaction(fromAddress, toAddress, amount);
+      pendingTransactionsRestored.signature = signature;
+      return pendingTransactionsRestored;
+    });
+
     const chainRestored = chain.map(block => {
       const { timestamp, transactions, previousHash, nonce, hash } = block;
       const transactionsRestored = transactions.map(transaction => {
         let transactionRestored;
         if (transaction.fromAddress === undefined) {
+          // For genesis block.
           transactionRestored = transaction;
         } else {
           const { fromAddress, toAddress, amount, signature } = transaction;
@@ -71,13 +80,18 @@ class Home extends Component {
       return blockRestored;
     });
 
-    this.blockchain = new Blockchain({difficulty, chain: chainRestored, pendingTransactions, miningReward});
+    this.blockchain = new Blockchain({
+      difficulty,
+      chain: chainRestored,
+      pendingTransactions: pendingTransactionsRestored,
+      miningReward
+    });
     const balance = this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       balance,
       difficulty,
       chain: this.blockchain.chain, // For the first time with a genesis block.
-      pendingTransactions,
+      pendingTransactions: pendingTransactionsRestored,
       completeTransactions: this.blockchain.getCompleteTransactions()
     });
   }
@@ -159,6 +173,7 @@ class Home extends Component {
           pendingTransactions: this.blockchain.pendingTransactions,
           dialogOpen: DIALOG.CLOSE
         });
+        localStorage.setItem(STORAGE.PENDING_TRANSACTIONS, JSON.stringify(this.blockchain.pendingTransactions));
         break;
       default:
         this.setState({
@@ -191,14 +206,6 @@ class Home extends Component {
       <div className="home">
         <NavBar title="Mini Blockchain" balance={balance} />
         <div className="current-view">
-          <BlockList
-            title="Blocks"
-            chain={chain}
-            onSelectBlock={this.handleBlockSelect}
-            onDeleteBlock={this.handleBlockDelete}
-            onCancelBlock={this.handleBlockCancel}
-            onCreateBlock={this.handleBlockCreate}
-          />
           <TransactionList
             title="Pending Transactions"
             transactions={pendingTransactions}
@@ -206,6 +213,14 @@ class Home extends Component {
             onSelectTransaction={this.handleTransactionSelect}
             onDeleteTransaction={this.handleTransactionDelete}
             onCreateTransaction={this.handleTransactionCreate}
+          />
+          <BlockList
+            title="Blocks"
+            chain={chain}
+            onSelectBlock={this.handleBlockSelect}
+            onDeleteBlock={this.handleBlockDelete}
+            onCancelBlock={this.handleBlockCancel}
+            onCreateBlock={this.handleBlockCreate}
           />
           <TransactionList
             title="Complete Transactions"

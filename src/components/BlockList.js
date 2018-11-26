@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import {
   Add as AddIcon,
+  Sync as SyncIcon
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import './BlockList.css';
@@ -35,10 +36,13 @@ const styles = {
     height: 40
   },
   valid: {
-    backgroundColor: 'lightgreen',
+    backgroundColor: 'lightgreen'
   },
   invalid: {
-    backgroundColor: 'lightcoral',
+    backgroundColor: 'lightcoral'
+  },
+  sync: {
+    animation: 'rotate 2s linear infinite'
   }
 }
 
@@ -47,7 +51,8 @@ const BlockList = ({
   title,
   chain,
   onSelectBlock,
-  onCreateBlock
+  onCreateBlock,
+  isMining
 }) => (
   <div className="block-list">
     <AppBar position="static" color="default">
@@ -68,8 +73,12 @@ const BlockList = ({
           color="primary"
           className={classes.forceSmall}
           onClick={onCreateBlock}
+          disabled={isMining}
         >
-          <AddIcon />
+          {isMining
+            ? <SyncIcon className={classes.sync} />
+            : <AddIcon />
+          }
         </Button>
       </Toolbar>
     </AppBar>
@@ -80,7 +89,10 @@ const BlockList = ({
             <CardActionArea
               className={classes.flex}
               component="div"
-              onClick={event => { event.stopPropagation(); onSelectBlock(event, index, chain);}}
+              onClick={event => {
+                event.stopPropagation();
+                onSelectBlock({event, index});
+              }}
             >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">

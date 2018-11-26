@@ -23,6 +23,7 @@ class Home extends Component {
       completeTransactions: [],
       blockIdSelected: null,
       transactionIdSelected: null,
+      isMining: false,
       dialogTitle: '',
       dialogText: '',
       dialogOpen: DIALOG.CLOSE,
@@ -98,7 +99,7 @@ class Home extends Component {
     });
   }
 
-  handleBlockSelect = (event, id, some) => {
+  handleBlockSelect = ({ id }) => {
     this.setState({
       blockSelected: this.blockchain.chain[id],
       dialogOpen: DIALOG.BLOCK_DETAIL
@@ -120,23 +121,30 @@ class Home extends Component {
     });
   };
 
-  handleBlockCreate = () => {
-    // TODO: promise then to update pending and complete transactions?
+  handleBlockCreate = async () => {
+    this.setState({
+      isMining: true
+    });
+    // Wait until applying an animation before mining starts.
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    });
+
     const { enqueueSnackbar } = this.props;
     this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       pendingTransactions: this.blockchain.pendingTransactions,
       completeTransactions: this.blockchain.getCompleteTransactions(),
       balance: this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY)),
-      chain: this.blockchain.chain
+      chain: this.blockchain.chain,
+      isMining: false
     }, () => {
       localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
       localStorage.setItem(STORAGE.PENDING_TRANSACTIONS, JSON.stringify([]));
       enqueueSnackbar('Block successfully mined!', {variant: 'success'});
     });
-  };
-
-  handleBlockCancel = () => {
   };
 
   handleDifficultyChange = ({ difficulty }) => {
@@ -240,7 +248,8 @@ class Home extends Component {
       dialogText,
       blockSelected,
       transactionSelected,
-      difficulty
+      difficulty,
+      isMining
     } = this.state;
 
     return (
@@ -248,7 +257,7 @@ class Home extends Component {
         <NavBar
           title="Mini Blockchain"
           balance={balance}
-          difficulty={difficulty}
+          difficulty={parseInt(difficulty)}
           onDeleteBlocks={this.handleBlocksDelete}
           onChangeDifficulty={this.handleDifficultyChange}
         />
@@ -266,8 +275,8 @@ class Home extends Component {
             chain={chain}
             onSelectBlock={this.handleBlockSelect}
             onDeleteBlock={this.handleBlockDelete}
-            onCancelBlock={this.handleBlockCancel}
             onCreateBlock={this.handleBlockCreate}
+            isMining={isMining}
           />
           <TransactionList
             title="Complete Transactions"

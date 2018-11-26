@@ -27,10 +27,10 @@ const Confirm = ({ title, open, onClose, text }) => (
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={() => {onClose('cancel');}}>
+        <Button color="inherit" onClick={event => {onClose({event, type: 'cancel'});}}>
           Cancel
         </Button>
-        <Button color="secondary" onClick={() => {onClose('delete');}}>
+        <Button color="secondary" onClick={event => {onClose({event, type: 'delete'});}}>
           Delete
         </Button>
       </DialogActions>

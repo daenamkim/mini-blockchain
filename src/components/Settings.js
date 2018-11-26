@@ -46,14 +46,14 @@ const User = ({ title, open, onClose, difficulty, onChangeDifficulty }) => (
             />
           </ListItem>
           <ListItem>
-            <Button variant="contained" color="secondary" onClick={onClose}>
+            <Button variant="contained" color="secondary" onClick={event => onClose({event, type: 'delete'})}>
               Delete
             </Button>
           </ListItem>
         </List>
       </DialogContent>
       <DialogActions>
-        <Button color="inherit" onClick={onClose}>
+        <Button color="inherit" onClick={event => onClose({event, type: 'close'})}>
           Close
         </Button>
       </DialogActions>

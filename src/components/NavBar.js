@@ -34,16 +34,19 @@ class NavBar extends Component {
   }
 
   handleSettingsOpen = () => {
-    console.log("123");
     this.setState({
       dialogOpen: DIALOG.SETTINGS
     });
   };
 
-  handleSettingsClose = settings => {
+  handleSettingsClose = ({ type }) => {
     this.setState({
       dialogOpen: DIALOG.CLOSE
     });
+
+    if (type === 'delete') {
+      this.props.onDeleteBlocks();
+    }
   }
 
   handleDifficultyChange = (event, difficulty) => {

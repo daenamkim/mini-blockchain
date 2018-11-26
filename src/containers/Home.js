@@ -185,10 +185,37 @@ class Home extends Component {
 
   };
 
-  handleConfirmClose = select => {
+  handleConfirmClose = ({ type }) => {
+    console.log(type);
     this.setState({
       dialogOpen: DIALOG.CLOSE
     });
+  };
+
+  handleBlocksDelete = () => {
+    this.blockchain.chain = this.blockchain.chain.slice(0, 1);
+    localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
+
+    this.setState({
+      chain: this.blockchain.chain,
+      balance: 0,
+      completeTransactions: this.blockchain.getCompleteTransactions(),
+      blockIdSelected: null,
+      transactionIdSelected: null,
+      blockSelected: {
+        hash: '',
+        previousHash: '',
+        transactions: [],
+        timestamp: 0
+      },
+      transactionSelected: {
+        fromAddress: '',
+        toAddress: '',
+        amount: 0,
+        timestamp: 0
+      }
+    });
+
   };
 
   render() {
@@ -206,7 +233,11 @@ class Home extends Component {
 
     return (
       <div className="home">
-        <NavBar title="Mini Blockchain" balance={balance} />
+        <NavBar
+          title="Mini Blockchain"
+          balance={balance}
+          onDeleteBlocks={this.handleBlocksDelete}
+        />
         <div className="current-view">
           <TransactionList
             title="Pending Transactions"

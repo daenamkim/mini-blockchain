@@ -44,7 +44,7 @@ const styles = {
     backgroundColor: 'lightblue'
   },
   withdraw: {
-    backgroundColor: 'lightcoral'
+    backgroundColor: 'lightpink '
   },
 }
 

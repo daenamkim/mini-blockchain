@@ -8,10 +8,17 @@ import {
   List,
   ListItem,
   ListItemText,
-  withMobileDialog
+  withStyles,
+  TextField
 } from '@material-ui/core';
 
-const User = ({ title, open, onClose, info }) => (
+const styles = {
+  fullWidth: {
+    width: '100%'
+  }
+}
+
+const User = ({ title, open, onClose, info, classes }) => (
   <div className="dialog-user-info">
     <Dialog
       fullWidth
@@ -28,10 +35,22 @@ const User = ({ title, open, onClose, info }) => (
             <ListItemText primary="Name" secondary={info.username} />
           </ListItem>
           <ListItem button>
-            <ListItemText primary="Public Key" secondary={info.publicKey} />
+            <div className={classes.fullWidth}>
+              <ListItemText primary="Public Key" />
+              <TextField
+                fullWidth
+                value={info.publicKey}
+              />
+            </div>
           </ListItem>
           <ListItem button>
-            <ListItemText primary="Private Key" secondary={info.privateKey} />
+            <div className={classes.fullWidth}>
+              <ListItemText primary="Private Key" />
+              <TextField
+                fullWidth
+                value={info.privateKey}
+              />
+            </div>
           </ListItem>
         </List>
       </DialogContent>
@@ -44,4 +63,4 @@ const User = ({ title, open, onClose, info }) => (
   </div>
 );
 
-export default withMobileDialog()(User);
+export default withStyles(styles)(User);

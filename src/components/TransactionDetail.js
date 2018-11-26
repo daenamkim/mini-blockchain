@@ -38,7 +38,6 @@ class TransactionDetail extends Component {
 
   handleAmountChange = event => {
     const amount = Number.parseInt(event.target.value) || 0;
-    console.log(amount);
     this.setState({
       amount
     });

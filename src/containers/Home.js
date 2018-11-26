@@ -124,9 +124,11 @@ class Home extends Component {
     this.setState({
       pendingTransactions: this.blockchain.pendingTransactions,
       completeTransactions: this.blockchain.getCompleteTransactions(),
+      balance: this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY)),
       chain: this.blockchain.chain
     }, () => {
       localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
+      localStorage.setItem(STORAGE.PENDING_TRANSACTIONS, JSON.stringify([]));
     });
   };
 

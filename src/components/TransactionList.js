@@ -39,10 +39,17 @@ const styles = {
   },
   fullWidth: {
     width: '100%'
-  }
+  },
+  deposit: {
+    backgroundColor: 'lightblue'
+  },
+  withdraw: {
+    backgroundColor: 'lightcoral'
+  },
 }
 
 const TransactionList = ({
+  myAddress,
   classes,
   title,
   transactions,
@@ -80,7 +87,7 @@ const TransactionList = ({
     <ul >
       {transactions.map((transaction, index) =>
         <li key={index} className="transaction-list--item">
-          <Card className={classes[transaction.isValid]}>
+          <Card className={classes[isPendingList ? {} : myAddress === transaction.toAddress ? 'deposit' : 'withdraw']}>
             <CardActionArea
               className={classes.flex}
               component="div"

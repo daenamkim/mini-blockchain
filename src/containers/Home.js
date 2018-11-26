@@ -11,6 +11,9 @@ import Blockchain from '../blockchain/Blockchain';
 import Block from '../blockchain/Block';
 import Transaction from '../blockchain/Transaction';
 import { withSnackbar } from 'notistack';
+import SHA256 from 'crypto-js/sha256';
+import { ec as EC } from 'elliptic';
+const ec = new EC('secp256k1');
 
 class Home extends Component {
   constructor(props) {
@@ -182,7 +185,10 @@ class Home extends Component {
     switch (type) {
       case 'create':
         const newTransaction = new Transaction(transaction.fromAddress, transaction.toAddress, transaction.amount);
-        this.blockchain.pendingTransactions = [...this.blockchain.pendingTransactions, newTransaction];
+        const publicKey = ec.keyFromPrivate(localStorage.getItem(STORAGE.PRIVATE_KEY));
+        // Signing a transaction.
+        newTransaction.signTransaction(publicKey);
+        this.blockchain.pendingTransactions.push(newTransaction);
         this.setState({
           pendingTransactions: this.blockchain.pendingTransactions,
           dialogOpen: DIALOG.CLOSE
@@ -271,6 +277,7 @@ class Home extends Component {
             onSelectTransaction={this.handleTransactionSelect}
             onDeleteTransaction={this.handleTransactionDelete}
             onCreateTransaction={this.handleTransactionCreate}
+            myAddress={null}
           />
           <BlockList
             title="Blocks"
@@ -285,6 +292,7 @@ class Home extends Component {
             transactions={completeTransactions}
             isPendingList={false}
             onSelectTransaction={this.handleTransactionSelect}
+            myAddress={localStorage.getItem(STORAGE.PUBLIC_KEY)}
           />
         </div>
         <Confirm

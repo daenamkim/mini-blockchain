@@ -97,7 +97,7 @@ class TransactionDetail extends Component {
               </ListItem>
               <ListItem>
                 <div className={classes.fullWidth}>
-                  <ListItemText primary={transaction.amount ? 'Amount' : 'Raw Data'} />
+                  <ListItemText primary={transaction.amount || isEditable ? 'Amount' : 'Raw Data'} />
                   <TextField
                     fullWidth
                     value={(!isEditable ? transaction.amount : amount) || (isEditable ? 0 : JSON.stringify(transaction))}

@@ -49,7 +49,6 @@ class BlockDetail extends Component {
   render() {
     const { title, open, block, onClose, classes, blockIdSelected } = this.props;
     const { block: newBlock } = this.state;
-    console.log(newBlock, blockIdSelected);
 
     return (
       <div className="dialog-confirm">

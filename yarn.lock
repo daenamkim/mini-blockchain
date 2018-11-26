@@ -6691,6 +6691,11 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
+notistack@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.3.9.tgz#622d89c0038b7cdebba2897b3018f89ada03551d"
+  integrity sha512-Xt55Jn2kq+1o34wS6y8ydj/84UpZrJhpWFfFqY5YqxZPdSiu5RgxhUcoTeq6XLQ8Mwg/TdhH+kRgn21Pxb6IlA==
+
 npm-bundled@^1.0.1:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/npm-bundled/-/npm-bundled-1.0.5.tgz#3c1732b7ba936b3a10325aef616467c0ccbcc979"

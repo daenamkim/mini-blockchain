@@ -10,6 +10,7 @@ import { DIALOG, STORAGE } from '../constants';
 import Blockchain from '../blockchain/Blockchain';
 import Block from '../blockchain/Block';
 import Transaction from '../blockchain/Transaction';
+import { withSnackbar } from 'notistack';
 
 class Home extends Component {
   constructor(props) {
@@ -120,6 +121,7 @@ class Home extends Component {
 
   handleBlockCreate = event => {
     // TODO: promise then to update pending and complete transactions?
+    const { enqueueSnackbar } = this.props;
     this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       pendingTransactions: this.blockchain.pendingTransactions,
@@ -129,6 +131,7 @@ class Home extends Component {
     }, () => {
       localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
       localStorage.setItem(STORAGE.PENDING_TRANSACTIONS, JSON.stringify([]));
+      enqueueSnackbar('Block successfully mined!', {variant: 'success'});
     });
   };
 
@@ -295,4 +298,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default withSnackbar(Home);

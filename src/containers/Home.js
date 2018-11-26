@@ -26,6 +26,7 @@ class Home extends Component {
       dialogTitle: '',
       dialogText: '',
       dialogOpen: DIALOG.CLOSE,
+      difficulty: 2,
       blockSelected: {
         hash: '',
         previousHash: '',
@@ -119,7 +120,7 @@ class Home extends Component {
     });
   };
 
-  handleBlockCreate = event => {
+  handleBlockCreate = () => {
     // TODO: promise then to update pending and complete transactions?
     const { enqueueSnackbar } = this.props;
     this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
@@ -140,6 +141,9 @@ class Home extends Component {
 
   handleDifficultyChange = ({ difficulty }) => {
     this.blockchain.difficulty = difficulty;
+    this.setState({
+      difficulty
+    }, () => localStorage.setItem(STORAGE.DIFFICULTY, difficulty));
   };
 
   handleTransactionSelect = ({ id, type }) => {
@@ -235,7 +239,8 @@ class Home extends Component {
       dialogTitle,
       dialogText,
       blockSelected,
-      transactionSelected
+      transactionSelected,
+      difficulty
     } = this.state;
 
     return (
@@ -243,6 +248,7 @@ class Home extends Component {
         <NavBar
           title="Mini Blockchain"
           balance={balance}
+          difficulty={difficulty}
           onDeleteBlocks={this.handleBlocksDelete}
           onChangeDifficulty={this.handleDifficultyChange}
         />

@@ -9,10 +9,8 @@ import {
   Toolbar,
   Button,
   Badge,
-  IconButton
 } from '@material-ui/core';
 import {
-  Delete as DeleteIcon,
   Add as AddIcon,
 } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
@@ -49,8 +47,6 @@ const BlockList = ({
   title,
   chain,
   onSelectBlock,
-  onDeleteBlock,
-  onCancelBlock,
   onCreateBlock
 }) => (
   <div className="block-list">
@@ -67,13 +63,6 @@ const BlockList = ({
             {title}
           </Typography>
         </div>
-        <Button
-          aria-label="Cancel"
-          color="inherit"
-          onClick={onCancelBlock}
-        >
-          Cancel
-        </Button>
         <Button
           variant="fab"
           color="primary"
@@ -104,12 +93,6 @@ const BlockList = ({
                   {new Date(block.timestamp).toString()}
                 </Typography>
               </CardContent>
-              {/* <IconButton
-                aria-label="Delete"
-                onClick={event => { event.stopPropagation(); onDeleteBlock(index);}}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton> */}
             </CardActionArea>
           </Card>
         </li>

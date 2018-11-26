@@ -29,8 +29,14 @@ class NavBar extends Component {
 
     this.state = {
       dialogOpen: DIALOG.CLOSE,
-      difficulty: 2, // TODO: get this from local storage
+      difficulty: this.props.difficulty
     }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.setState({
+      difficulty: nextProps.difficulty
+    });
   }
 
   handleSettingsOpen = () => {

@@ -57,12 +57,13 @@ const BlockList = ({
   classes,
   title,
   chain,
+  isChainValid,
   onSelectBlock,
   onCreateBlock,
   isMining
 }) => (
   <div className="block-list">
-    <AppBar position="static" color="default">
+    <AppBar position="static" color="default" className={classes[isChainValid ? {} : 'invalid']}>
       <Toolbar className={classes.flex}>
         <Badge badgeContent={chain.length || 0} color="primary">
           <span></span>

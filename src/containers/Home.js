@@ -18,6 +18,7 @@ class Home extends Component {
 
     this.state = {
       chain: [],
+      isChainValid: true,
       balance: 0,
       pendingTransactions: [],
       completeTransactions: [],
@@ -93,6 +94,7 @@ class Home extends Component {
       balance,
       difficulty,
       chain: this.blockchain.chain, // For the first time with a genesis block.
+      isChainValid: this.blockchain.isChainValid(),
       pendingTransactions: pendingTransactionsRestored,
       completeTransactions: this.blockchain.getCompleteTransactions()
     });
@@ -130,6 +132,7 @@ class Home extends Component {
       completeTransactions: this.blockchain.getCompleteTransactions(),
       balance: this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY)),
       chain: this.blockchain.chain,
+      isChainValid: this.blockchain.isChainValid(),
       isMining: false
     }, () => {
       localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
@@ -215,6 +218,7 @@ class Home extends Component {
 
     this.setState({
       chain: this.blockchain.chain,
+      isChainValid: this.blockchain.isChainValid(),
       balance: 0,
       completeTransactions: this.blockchain.getCompleteTransactions(),
       transactionIdSelected: null,
@@ -237,6 +241,7 @@ class Home extends Component {
   render() {
     const {
       chain,
+      isChainValid,
       balance,
       pendingTransactions,
       completeTransactions,
@@ -270,6 +275,7 @@ class Home extends Component {
           <BlockList
             title="Blocks"
             chain={chain}
+            isChainValid={isChainValid}
             onSelectBlock={this.handleBlockSelect}
             onCreateBlock={this.handleBlockCreate}
             isMining={isMining}

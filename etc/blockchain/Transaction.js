@@ -8,6 +8,7 @@ class Transaction {
     this.toAddress = toAddress;
     this.amount = amount;
     this.signature = '';
+    // TODO: add a timestamp
   }
 
   calculateHash() {

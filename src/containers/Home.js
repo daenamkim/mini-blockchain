@@ -30,6 +30,12 @@ class Home extends Component {
         previousHash: '',
         transactions: [],
         timestamp: 0
+      },
+      transactionSelected: {
+        fromAddress: '',
+        toAddress: '',
+        amount: 0,
+        timestamp: 0
       }
     };
 
@@ -42,41 +48,41 @@ class Home extends Component {
     const pendingTransactions = localStorage.getItem(STORAGE.PENDING_TRANSACTIONS) || [];
     const miningReward = 100;
 
-    // Recover chain (blocks and transactions) with REAL classes.
-    const chainRecovered = chain.map(block => {
+    // Restore chain (blocks and transactions) with REAL classes.
+    const chainRestored = chain.map(block => {
       const { timestamp, transactions, previousHash, nonce, hash } = block;
-      const transactionsRecovered = transactions.map(transaction => {
-        let transactionRecovered;
+      const transactionsRestored = transactions.map(transaction => {
+        let transactionRestored;
         if (transaction.fromAddress === undefined) {
-          transactionRecovered = transaction;
+          transactionRestored = transaction;
         } else {
           const { fromAddress, toAddress, amount, signature } = transaction;
-          transactionRecovered = new Transaction(fromAddress, toAddress, amount);
-          transactionRecovered.signature = signature;
+          transactionRestored = new Transaction(fromAddress, toAddress, amount);
+          transactionRestored.signature = signature;
         }
 
-        return transactionRecovered;
+        return transactionRestored;
       });
 
-      const blockRecovered = new Block(timestamp, transactionsRecovered, previousHash);
-      blockRecovered.nonce = nonce;
-      blockRecovered.hash = hash;
+      const blockRestored = new Block(timestamp, transactionsRestored, previousHash);
+      blockRestored.nonce = nonce;
+      blockRestored.hash = hash;
 
-      return blockRecovered;
+      return blockRestored;
     });
-    console.log("TO BLOCKCHAIN", chainRecovered);
-    this.blockchain = new Blockchain({difficulty, chain: chainRecovered, pendingTransactions, miningReward});
+
+    this.blockchain = new Blockchain({difficulty, chain: chainRestored, pendingTransactions, miningReward});
     const balance = this.blockchain.getBalanceOfAddress(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
       balance,
       difficulty,
       chain: this.blockchain.chain, // For the first time with a genesis block.
       pendingTransactions,
+      completeTransactions: this.blockchain.getCompleteTransactions()
     });
   }
 
   handleBlockSelect = (event, id, some) => {
-    console.log(some);
     this.setState({
       blockSelected: this.blockchain.chain[id],
       dialogOpen: DIALOG.BLOCK_DETAIL
@@ -98,10 +104,12 @@ class Home extends Component {
     });
   };
 
-  handleBlockCreate = () => {
-    // TODO: promise?
+  handleBlockCreate = event => {
+    // TODO: promise then to update pending and complete transactions?
     this.blockchain.minePendingTransactions(localStorage.getItem(STORAGE.PUBLIC_KEY));
     this.setState({
+      pendingTransactions: this.blockchain.pendingTransactions,
+      completeTransactions: this.blockchain.getCompleteTransactions(),
       chain: this.blockchain.chain
     }, () => {
       localStorage.setItem(STORAGE.CHAIN, JSON.stringify(this.blockchain.chain));
@@ -109,14 +117,21 @@ class Home extends Component {
   };
 
   handleBlockCancel = () => {
-    console.log("TODO: block cancel");
   };
 
-  handleTransactionSelect = id => {
-    this.setState({
-      transactionIdSelected: id,
-      dialogOpen: DIALOG.TRANSACTION_DETAIL
-    });
+  handleTransactionSelect = ({ id, type }) => {
+    console.log(id, this.state.completeTransactions, this.state.completeTransactions[id])
+    if (type === 'pending') {
+      this.setState({
+        transactionSelected: this.state.pendingTransactions[id],
+        dialogOpen: DIALOG.TRANSACTION_DETAIL
+      });
+    } else if (type === 'complete') {
+      this.setState({
+        transactionSelected: this.state.completeTransactions[id],
+        dialogOpen: DIALOG.TRANSACTION_DETAIL
+      });
+    }
   };
 
   handleTransactionDelete = id => {
@@ -135,15 +150,25 @@ class Home extends Component {
     });
   };
 
-  handleTransactionDetailClose = (something) => {
-    console.log(something);
-    this.setState({
-      dialogOpen: DIALOG.CLOSE
-    });
+  handleTransactionDetailClose = (event, type, transaction) => {
+    switch (type) {
+      case 'create':
+        const newTransaction = new Transaction(transaction.fromAddress, transaction.toAddress, transaction.amount);
+        this.blockchain.pendingTransactions = [...this.blockchain.pendingTransactions, newTransaction];
+        this.setState({
+          pendingTransactions: this.blockchain.pendingTransactions,
+          dialogOpen: DIALOG.CLOSE
+        });
+        break;
+      default:
+        this.setState({
+          dialogOpen: DIALOG.CLOSE
+        });
+    }
+
   };
 
   handleConfirmClose = select => {
-    console.log(select);
     this.setState({
       dialogOpen: DIALOG.CLOSE
     });
@@ -158,7 +183,8 @@ class Home extends Component {
       dialogOpen,
       dialogTitle,
       dialogText,
-      blockSelected
+      blockSelected,
+      transactionSelected
     } = this.state;
 
     return (
@@ -176,7 +202,7 @@ class Home extends Component {
           <TransactionList
             title="Pending Transactions"
             transactions={pendingTransactions}
-            isMutable={true}
+            isPendingList={true}
             onSelectTransaction={this.handleTransactionSelect}
             onDeleteTransaction={this.handleTransactionDelete}
             onCreateTransaction={this.handleTransactionCreate}
@@ -184,7 +210,7 @@ class Home extends Component {
           <TransactionList
             title="Complete Transactions"
             transactions={completeTransactions}
-            isMutable={false}
+            isPendingList={false}
             onSelectTransaction={this.handleTransactionSelect}
           />
         </div>
@@ -196,19 +222,25 @@ class Home extends Component {
         />
         <TransactionDetail
           title="New Transaction"
+          isEditable={true}
+          fromAddress={localStorage.getItem(STORAGE.PUBLIC_KEY)}
           open={dialogOpen === DIALOG.NEW_TRANSACTION}
           onClose={this.handleTransactionDetailClose}
+          transaction={{}}
         />
         <BlockDetail
           title="Block Detail"
+          isEditable={false}
           block={blockSelected}
           open={dialogOpen === DIALOG.BLOCK_DETAIL}
           onClose={this.handleBlockDetailClose}
         />
         <TransactionDetail
           title="Transaction Detail"
+          isEditable={false}
           open={dialogOpen === DIALOG.TRANSACTION_DETAIL}
           onClose={this.handleTransactionDetailClose}
+          transaction={transactionSelected}
         />
       </div>
     );

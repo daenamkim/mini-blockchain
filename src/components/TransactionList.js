@@ -39,7 +39,7 @@ const TransactionList = ({
   classes,
   title,
   transactions,
-  isMutable,
+  isPendingList,
   onSelectTransaction,
   onDeleteTransaction,
   onCreateTransaction
@@ -57,7 +57,7 @@ const TransactionList = ({
         >
           {title}
         </Typography>
-        {isMutable
+        {isPendingList
           ? <Button
               variant="fab"
               color="primary"
@@ -77,14 +77,21 @@ const TransactionList = ({
             <CardActionArea
               className={classes.flex}
               component="div"
-              onClick={event => { event.stopPropagation(); onSelectTransaction(item.id);}}
+              onClick={event => {
+                event.stopPropagation();
+                onSelectTransaction({
+                  event,
+                  id: index,
+                  type: isPendingList ? 'pending' : 'complete'
+                });
+              }}
             >
               <CardContent className={classes.cardGrow}>
                 <Typography variant="h6" component="h3">
-                  From: {item.from}
+                  From: {item.fromAddress}
                 </Typography>
                 <Typography variant="h6" component="h3">
-                  To: {item.to}
+                  To: {item.toAddress}
                 </Typography>
                 <Typography component="p">
                   Amount: {item.amount} Coins
@@ -93,7 +100,7 @@ const TransactionList = ({
                   {item.time}
                 </Typography>
               </CardContent>
-              {isMutable
+              {isPendingList
                 ? <IconButton
                     aria-label="Delete"
                     onClick={(event) => {event.stopPropagation(); onDeleteTransaction(item.id);}}

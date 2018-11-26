@@ -62,6 +62,19 @@ class Blockchain {
     return balance;
   }
 
+  getCompleteTransactions() {
+    // TODO: can be performance issue?
+    const transactions = [];
+
+    for (const block of this.chain) {
+      for (const trans of block.transactions) {
+        transactions.push(trans);
+      }
+    }
+
+    return transactions;
+  }
+
   isChainValid() {
     // Skip for the genesis block.
     for (let i = 1; i < this.chain.length; i++) {

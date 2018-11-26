@@ -50,10 +50,11 @@ class NavBar extends Component {
   }
 
   handleDifficultyChange = (event, difficulty) => {
-    console.log(difficulty)
     this.setState({
       difficulty
     });
+
+    this.props.onChangeDifficulty({event, difficulty});
   };
 
   handleUserOpen = () => {

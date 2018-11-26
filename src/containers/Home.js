@@ -138,6 +138,10 @@ class Home extends Component {
   handleBlockCancel = () => {
   };
 
+  handleDifficultyChange = ({ difficulty }) => {
+    this.blockchain.difficulty = difficulty;
+  };
+
   handleTransactionSelect = ({ id, type }) => {
     console.log(id, this.state.completeTransactions, this.state.completeTransactions[id])
     if (type === 'pending') {
@@ -240,6 +244,7 @@ class Home extends Component {
           title="Mini Blockchain"
           balance={balance}
           onDeleteBlocks={this.handleBlocksDelete}
+          onChangeDifficulty={this.handleDifficultyChange}
         />
         <div className="current-view">
           <TransactionList

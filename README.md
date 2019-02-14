@@ -1,6 +1,7 @@
 # Mini Blockchain
 
-![mini blockchain](./src/img/logo.png)
+![login](./etc/login.png)
+![home](./etc/home.png)
 
 ### Development
 
@@ -14,6 +15,7 @@ $ yarn start
 
 ### TODO
 
+- Unit Test with Jest
 - UI Test with TestCafe
 - Linter + Prettier + Husky hook
 - P2P Connection
